@@ -2,8 +2,9 @@
 Question answering model for medical questions
 
 To do list:
-- [ ] Find a Dataset
+- [x] Find a Dataset
 - [ ] Preprocess Data
 - [ ] Normalize Data
+- [ ] Retrieve Data from files
 - [ ] 
 
