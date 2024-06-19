@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <title>Interactive Chat</title>
+    <style>
+        body {
+            background: #f0f0f0;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            
+           /* background-image: url(healthcare-chatbot.png);*/
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .chat-box {
+            background: #f0f0f0;
+            padding: 10px;
+            max-height: 800px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            flex-grow: 1;
+            border: none;
+        }
+
+        .chat-message {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            background: #f8f8f8;
+        }
+
+        .chat-message.user {
+            background: #d1e7dd;
+            justify-content: flex-end;
+        }
+
+        .chat-message p {
+            margin: 0;
+        }
+
+        .chat-input-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            background: #f8f8f8;
+            border-radius: 25px;
+            padding: 10px 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-input-container input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: none;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .chat-input-container .send-button {
+            background: none;
+            border: none;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .chat-input-container .send-button img {
+            width: 20px;
+            height: 20px;
+        }
+
+    
+    </style>
+</head>
+<body>
+    
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+            
+        </div>
+        <div class="chat-input-container">
+            <span class="material-symbols-outlined">
+                quiz
+                </span>
+            <input type="text" id="chat-input" placeholder="Ahmad hamad" />
+            <button class="send-button" id="send-button">
+                <span class="material-symbols-outlined">
+                    arrow_upward
+                    </span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const sendButton = document.getElementById("send-button");
+            const chatInput = document.getElementById("chat-input");
+            const chatBox = document.getElementById("chat-box");
+
+            sendButton.addEventListener("click", function() {
+                sendMessage();
+            });
+
+            chatInput.addEventListener("keypress", function(e) {
+                if (e.key === "Enter") {
+                    sendMessage();
+                }
+            });
+
+            function sendMessage() {
+                const message = chatInput.value.trim();
+                if (message !== "") {
+                    // Append user's message
+                    appendMessage(message, "user");
+
+                    // Clear input field
+                    chatInput.value = "";
+
+                    // Simulate response from ChatGPT
+                    setTimeout(function() {
+                        const response = "hello";
+                        appendMessage(response, "chatgpt");
+                    }, 1000); // Simulate a delay for the response
+                }
+            }
+
+            function appendMessage(message, sender) {
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("chat-message");
+                if (sender === "user") {
+                    messageElement.classList.add("user");
+                }
+
+                const messageText = document.createElement("p");
+                messageText.textContent = message;
+
+                messageElement.appendChild(messageText);
+                chatBox.appendChild(messageElement);
+
+                // Scroll to the bottom of the chat box
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>
