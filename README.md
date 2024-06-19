@@ -1,2 +1,2 @@
 # QA_medical
-Question answering model for medical data
+Question answering model for medical questions
