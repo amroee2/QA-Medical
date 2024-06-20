@@ -6,6 +6,7 @@ Question answering model for medical questions
 - [ ] Preprocess Data & Normalize Data
 - [ ] prepare Retrieve Data Model
 - [ ] prepare QA model
+- [x] prepare Gui 
 - [ ] connect qa and retrieval model
 - [ ] Report
 
