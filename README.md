@@ -4,9 +4,9 @@ Question answering model for medical questions
 ### To do list:
 - [x] Find a Dataset
 - [x] Preprocess Data & Normalize Data
-- [ ] prepare Retrieve Data Model
+- [x] prepare Retrieve Data Model
 - [x] prepare QA model
-- [x] prepare Gui 
-- [ ] connect qa and retrieval model
+- [x] prepare Gui + API
+- [x] connect qa and retrieval model with Gui
 - [ ] Report
 
