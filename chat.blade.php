@@ -6,39 +6,40 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <title>Interactive Chat</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 </head>
 <body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <div id="context-options" class="d-flex flex-column align-items-end me-3 mb-3">
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="contextOption" id="contextNo" value="no" checked>
-            <label class="form-check-label" for="contextNo">
-                No Context
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="contextOption" id="contextYes" value="yes">
-            <label class="form-check-label" for="contextYes">
-                Add Context
-            </label>
-        </div>
-        <textarea class="form-control mt-2 d-none" id="context-input" rows="3" placeholder="Enter context here..."></textarea>
-    </div>
-    
-    <div class="chat-container">
-        <div class="chat-box" id="chat-box">
-            
-        </div>
-        <div class="chat-input-container mb-3">
-            <span class="material-symbols-outlined">  quiz </span>
-            <input class="ms-2" type="text" id="chat-input" placeholder="Message Medical Chat" />
-            <button class="send-button " id="send-button">
-                <span class="material-symbols-outlined bg-dark p-2 text-white rounded-circle fs-5 fw-bold">                    arrow_upward      </span>
-            </button>
-        </div>
-    </div><div id="nav-bar">
+    <div id="context-options" class="context-box d-none">
+      <div class="form-check">
+          <input class="form-check-input" type="radio" name="contextOption" id="contextNo" value="no" >
+          <label class="form-check-label" for="contextNo">No Context</label>
+      </div>
+      <div class="form-check">
+          <input class="form-check-input" type="radio" name="contextOption" id="contextYes" value="yes"checked>
+          <label class="form-check-label" for="contextYes">Add Context</label>
+      </div>
+      <textarea class="form-control mt-2 d-block" id="context-input" rows="3" placeholder="Enter context here..."></textarea>
+      <button class="close-button" id="close-button">Close</button>
+  </div>
+
+  <div class="chat-container">
+      <div class="chat-box" id="chat-box"></div>
+      <div class="chat-input-container mb-3">
+          <span class="material-symbols-outlined" id="context-toggle">quiz</span>
+          <input class="ms-2" type="text" id="chat-input" placeholder="Message Medical Chat" />
+          <button class="send-button" id="send-button">
+              <span class="material-symbols-outlined bg-dark p-2 text-white rounded-circle fs-5 fw-bold">arrow_upward</span>
+          </button>
+      </div>
+  </div>
+
+    {{-- </div><div id="nav-bar">
         <input id="nav-toggle" type="checkbox" />
         <div id="nav-header">
+          <a href="https://codepen.io" id="nav-title" target="_blank">History</a><label for="nav-toggle"><span id="nav-toggle-burger"></span></label>
           <hr />
         </div>
         <div id="nav-content">
@@ -74,28 +75,37 @@
               <img src="https://gravatar.com/avatar/4474ca42d303761c2901fa819c4f2547" />
             </div>
             <div id="nav-footer-titlebox">
+              <a href="https://codepen.io/uahnbu/pens/public" id="nav-footer-title" target="_blank">uahnbu</a><span id="nav-footer-subtitle">Admin</span>
             </div>
             <label for="nav-footer-toggle"><i class="fas fa-caret-up"></i></label>
           </div>
           <div id="nav-footer-content">
-            <Lorem>.</Lorem>
+            <Lorem>ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</Lorem>
           </div>
         </div>
-      </div>
+      </div> --}}
+
+    
+
+
 </body>
     <style>
-        body {
-            background: #f0f0f0;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
-            
-        /* background-image: url(healthcare-chatbot.png);*/
-        }
+      body {
+    background: #f0f0f0;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    background-image: url('images/3.jpg');
+    background-size: cover;
+    background-position: center right; /* Adjusted to move the image slightly to the right */
+    width: 100%;
+}
+
+
 
         .chat-container {
             width: 100%;
@@ -108,7 +118,8 @@
         }
 
         .chat-box {
-            background: #f0f0f0;
+            /*background: #f0f0f0;*/
+
             padding: 10px;
             max-height: 550px;
             overflow-y: auto;
@@ -360,7 +371,9 @@ label[for=nav-toggle] {
   top: 100%;
   box-shadow: 16px -16px var(--background);
 }
-
+#context-toggle{
+  cursor: pointer;
+}
 .nav-button {
   position: relative;
   margin-left: 16px;
@@ -444,6 +457,12 @@ label[for=nav-toggle] {
   z-index: 2;
   transition: width 0.2s, height 0.2s;
 }
+#context-input{
+  font-size: 18px;
+  font-family: "Amiri", serif;
+  font-weight: 700;
+  font-style: normal;
+}
 
 #nav-footer-heading {
   position: relative;
@@ -517,24 +536,47 @@ label[for=nav-footer-toggle] {
   border-radius: 99px;
   background-color: #D62929;
 }
+
 #context-options {
     position: absolute;
-    top: 300px;
-    right: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    top: 250px;
+    right: 500px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    z-index: 1000;
+    text-align: center;
+    min-width: 400px;
+    max-width: 800px !important; 
 }
 
-.d-none {
-    display: none;
+#context-options .form-check {
+    display: inline-block;
+    margin: 0 10px;
 }
 
-.d-block {
-    display: block;
+#context-options .form-check-label {
+    font-weight: bold;
+    color: #333;
 }
 
-
+#context-options textarea {
+    resize: none;
+    transition: height 0.2s ease-in-out;
+    width: 100%;
+    margin-top: 10px;
+}
+.close-button {
+            cursor: pointer;
+            background-color:white;
+            color: black;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
     </style>
 
 <script>
@@ -574,7 +616,9 @@ label[for=nav-footer-toggle] {
                 question: message,
                 context: contextInput.value.trim()
             };
-
+            if(!contextOptionYes.checked){
+              postData['context'] = ""
+            }
             // Make POST request to Flask API endpoint
             fetch('http://127.0.0.1:5000/answer', {
                 method: 'POST',
@@ -610,6 +654,33 @@ label[for=nav-footer-toggle] {
             contextInput.value = "";
         }
     }
+    document.getElementById('context-toggle').addEventListener('click', function() {
+            var contextOptions = document.getElementById('context-options');
+            if (contextOptions.classList.contains('d-none')) {
+                contextOptions.classList.remove('d-none');
+                contextOptions.classList.add('d-block');
+            } else {
+                contextOptions.classList.remove('d-block');
+                contextOptions.classList.add('d-none');
+            }
+        });
+
+        document.getElementById('contextYes').addEventListener('click', function() {
+            var contextInput = document.getElementById('context-input');
+            contextInput.classList.remove('d-none');
+            contextInput.classList.add('d-block');
+        });
+
+        document.getElementById('contextNo').addEventListener('click', function() {
+            var contextInput = document.getElementById('context-input');
+            contextInput.classList.remove('d-block');
+            contextInput.classList.add('d-none');
+        });
+        document.getElementById('close-button').addEventListener('click', function() {
+            var contextOptions = document.getElementById('context-options');
+            contextOptions.classList.remove('d-block');
+            contextOptions.classList.add('d-none');
+        });
 
     function appendMessage(message, sender) {
         const messageElement = document.createElement("div");

@@ -1,11 +1,8 @@
-from flask import Flask, request, jsonify
-from transformers import AutoTokenizer, AutoModelForQuestionAnswering
-import torch
-from flask_cors import CORS
 import string
 from textblob import TextBlob
 import re
 import qalsadi.lemmatizer as ql
+lemmatizer = ql.Lemmatizer()
 import pyarabic.araby as araby
 from nltk.tokenize import word_tokenize
 from rank_bm25 import BM25Okapi
@@ -13,10 +10,7 @@ import arabic_reshaper
 from bidi.algorithm import get_display
 import pandas as pd
 import nltk
-from nltk.corpus import stopwords
-# Define the stopwords list for Arabic
-arabic_stopwords = set(stopwords.words('arabic'))
-# nltk.download('punkt')
+nltk.download('punkt')
 
 
 arabic_stopwords = set([
@@ -69,18 +63,6 @@ arabic_stopwords = set([
 
 stopwords = [arabic_reshaper.reshape(s) for s in arabic_stopwords]
 stopwords=set(stopwords)
-def remove_arabic_stopwords(text, stopwords=arabic_stopwords):
-        # Split the text into words
-        words = text.split()
-        
-        # Remove punctuation from words and filter out stopwords
-        table = str.maketrans('', '', string.punctuation)
-        filtered_words = [word.translate(table) for word in words if word.translate(table) not in stopwords]
-        
-        # Join the filtered words back into a string
-        filtered_text = ' '.join(filtered_words)
-        
-        return filtered_text
 
 class ArabicTextPreprocessor:
     def __init__(self):
@@ -99,7 +81,6 @@ class ArabicTextPreprocessor:
         words=textb.words
         return " ".join([w for w in words if w not in stopwords])
     def lemmatize(self,text):
-        lemmatizer = ql.Lemmatizer()
         lemmas= [lemmatizer.lemmatize(word) for word in text.split()]
         return " ".join(lemmas)
     def normalizeArabic(self,text):
@@ -133,16 +114,16 @@ textpreprocessor=ArabicTextPreprocessor()
 
 #Preprocessing train, test and val data:
 def Preprocess_question(qst1):
-    print(f'Question1:\n{qst1}')
-    qst1=textpreprocessor.remove_punctuation(qst1)
-    print(f'Question1 without punctuation:\n{qst1}')
-    qst1=remove_arabic_stopwords(qst1)
-    print(f'Question1 without punctuation and without stopwords:\n{qst1}')
-    qst1=textpreprocessor.lemmatize(qst1)
-    print(f'Question1 lemmatized:\n{qst1}')
-    qst1=textpreprocessor.normalizeArabic(qst1)
-    print(f'Question1 normalised:\n{qst1}')
-    return str(qst1)
+  print(f'Question1:\n{qst1}')
+  qst1=textpreprocessor.remove_punctuation(qst1)
+  print(f'Question1 without punctuation:\n{qst1}')
+  qst1=textpreprocessor.remove_stopwords(qst1,stopwords)
+  print(f'Question1 without punctuation and without stopwords:\n{qst1}')
+  qst1=textpreprocessor.lemmatize(qst1)
+  print(f'Question1 lemmatized:\n{qst1}')
+  qst1=textpreprocessor.normalizeArabic(qst1)
+  print(f'Question1 normalised:\n{qst1}')
+  return qst1
 # Load the CSV file
 final = pd.read_csv('FinalTrain.csv')
 # Function to normalize Arabic text
@@ -173,61 +154,18 @@ def retrieve_context(query, bm25, df, top_n=1):
     best_doc_indices = scores.argsort()[-top_n:][::-1]
     return df.iloc[best_doc_indices]['answer'].tolist()
 
+# Example query
+# Retrieve the most relevant documents
+# relevant_docs = retrieve_context(query, bm25, final, top_n=1)
+
 def AnswerQuestion(question):
     question = Preprocess_question(question)
     answer = retrieve_context(question, bm25, final, top_n=1)
-    return answer[0]
-
-# Initialize Flask application
-app = Flask(__name__)
-CORS(app)  # This will enable CORS for all routes
-
-model_name_or_path = "ZeyadAhmed/AraElectra-Arabic-SQuADv2-QA"
-
-# Load tokenizer and model
-tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
-model = AutoModelForQuestionAnswering.from_pretrained(model_name_or_path)
-
-# Function to perform contextual question answering
-def contextual_qa(question, context):
-    inputs = tokenizer(question, context, add_special_tokens=True, return_tensors="pt")
-    input_ids = inputs["input_ids"].tolist()[0]
-
-    # Get the answer from model
-    with torch.no_grad():
-        outputs = model(**inputs)
-    
-    start_scores = outputs.start_logits
-    end_scores = outputs.end_logits
-
-    # Find the tokens with the highest `start` and `end` scores
-    answer_start = torch.argmax(start_scores)
-    answer_end = torch.argmax(end_scores) + 1
-
-    answer = tokenizer.decode(input_ids[answer_start:answer_end], skip_special_tokens=True)
     return answer
 
-# Route to handle POST requests for question answering
-@app.route('/answer', methods=['POST'])
-def answer_question():
-    data = request.get_json()
-    question = data.get('question', '')
-    context = data.get('context', '')
-
-    if not question:
-        return jsonify({'error': 'Question is required'}), 400
-
-    try:
-        if context == "":
-            context = AnswerQuestion(question)
-            print(f"raziiiiiiiiiiiiiiii {context}")
-            answer = contextual_qa(question, context)
-            print(answer)            
-        else:
-            answer = contextual_qa(question, context)
-        return jsonify({'answer': answer})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-if __name__ == '__main__':
-    app.run(debug=True)
+question = "ما هي اعراض السكري"
+print(AnswerQuestion(question))
+# print(f"no of docs = {len(relevant_docs)}")
+# for doc in relevant_docs:
+#     reshaped_text = arabic_reshaper.reshape(doc)
+# print(f"Relevant document: {reshaped_text}")
