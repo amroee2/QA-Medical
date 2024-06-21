@@ -9,33 +9,31 @@
 </head>
 <body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <div id="context-options" class="d-flex flex-column align-items-end me-3 mb-3">
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="contextOption" id="contextNo" value="no" checked>
-            <label class="form-check-label" for="contextNo">
-                No Context
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="contextOption" id="contextYes" value="yes">
-            <label class="form-check-label" for="contextYes">
-                Add Context
-            </label>
-        </div>
-        <textarea class="form-control mt-2 d-none" id="context-input" rows="3" placeholder="Enter context here..."></textarea>
-    </div>
-    
-    <div class="chat-container">
-        <div class="chat-box" id="chat-box">
-            
-        </div>
-        <div class="chat-input-container mb-3">
-            <span class="material-symbols-outlined">  quiz </span>
-            <input class="ms-2" type="text" id="chat-input" placeholder="Message Medical Chat" />
-            <button class="send-button " id="send-button">
-                <span class="material-symbols-outlined bg-dark p-2 text-white rounded-circle fs-5 fw-bold">                    arrow_upward      </span>
-            </button>
-        </div>
+    <div id="context-options" class="context-box d-none">
+      <div class="form-check">
+          <input class="form-check-input" type="radio" name="contextOption" id="contextNo" value="no" >
+          <label class="form-check-label" for="contextNo">No Context</label>
+      </div>
+      <div class="form-check">
+          <input class="form-check-input" type="radio" name="contextOption" id="contextYes" value="yes"checked>
+          <label class="form-check-label" for="contextYes">Add Context</label>
+      </div>
+      <textarea class="form-control mt-2 d-block" id="context-input" rows="3" placeholder="Enter context here..."></textarea>
+      <button class="close-button" id="close-button">Close</button>
+
+  </div>
+
+  <div class="chat-container">
+      <div class="chat-box" id="chat-box"></div>
+      <div class="chat-input-container mb-3">
+          <span class="material-symbols-outlined" id="context-toggle">quiz</span>
+          <input class="ms-2" type="text" id="chat-input" placeholder="Message Medical Chat" />
+          <button class="send-button" id="send-button">
+              <span class="material-symbols-outlined bg-dark p-2 text-white rounded-circle fs-5 fw-bold">arrow_upward</span>
+          </button>
+      </div>
+  </div>
+
     </div><div id="nav-bar">
         <input id="nav-toggle" type="checkbox" />
         <div id="nav-header">
@@ -90,18 +88,21 @@
 
 </body>
     <style>
-        body {
-            background: #f0f0f0;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: center;
-            
-        /* background-image: url(healthcare-chatbot.png);*/
-        }
+      body {
+    background: #f0f0f0;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    background-image: url('3.jpg');
+    background-size: cover;
+    background-position: center right; /* Adjusted to move the image slightly to the right */
+}
+
+
 
         .chat-container {
             width: 100%;
@@ -114,9 +115,9 @@
         }
 
         .chat-box {
-            background: #f0f0f0;
+            /*background: #f0f0f0;*/
             padding: 10px;
-            max-height: 800px;
+            max-height: 550px;
             overflow-y: auto;
             margin-bottom: 20px;
             flex-grow: 1;
@@ -523,28 +524,52 @@ label[for=nav-footer-toggle] {
   border-radius: 99px;
   background-color: #D62929;
 }
+
 #context-options {
     position: absolute;
     top: 300px;
-    right: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    right: 600px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    z-index: 1000;
+    text-align: center;
 }
 
-.d-none {
-    display: none;
+#context-options .form-check {
+    display: inline-block;
+    margin: 0 10px;
 }
 
-.d-block {
-    display: block;
+#context-options .form-check-label {
+    font-weight: bold;
+    color: #333;
 }
+
+#context-options textarea {
+    resize: none;
+    transition: height 0.2s ease-in-out;
+    width: 100%;
+    margin-top: 10px;
+}
+.close-button {
+            cursor: pointer;
+            background-color:white;
+            color: black;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
 
 
     </style>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function() {
     const sendButton = document.getElementById("send-button");
     const chatInput = document.getElementById("chat-input");
     const chatBox = document.getElementById("chat-box");
@@ -617,6 +642,34 @@ function generateResponse(message) {
         // Replace this with actual logic to generate a response from the model
         return "هذه هي الإجابة بناءً على السؤال والسياق المقدم.";
     }
+
+    document.getElementById('context-toggle').addEventListener('click', function() {
+            var contextOptions = document.getElementById('context-options');
+            if (contextOptions.classList.contains('d-none')) {
+                contextOptions.classList.remove('d-none');
+                contextOptions.classList.add('d-block');
+            } else {
+                contextOptions.classList.remove('d-block');
+                contextOptions.classList.add('d-none');
+            }
+        });
+
+        document.getElementById('contextYes').addEventListener('click', function() {
+            var contextInput = document.getElementById('context-input');
+            contextInput.classList.remove('d-none');
+            contextInput.classList.add('d-block');
+        });
+
+        document.getElementById('contextNo').addEventListener('click', function() {
+            var contextInput = document.getElementById('context-input');
+            contextInput.classList.remove('d-block');
+            contextInput.classList.add('d-none');
+        });
+        document.getElementById('close-button').addEventListener('click', function() {
+            var contextOptions = document.getElementById('context-options');
+            contextOptions.classList.remove('d-block');
+            contextOptions.classList.add('d-none');
+        });
 
 
 
