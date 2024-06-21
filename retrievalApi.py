@@ -181,9 +181,12 @@ query = "ما هي اعراض مرض السكري ؟"
 # relevant_docs = retrieve_context(query, bm25, final, top_n=1)
 
 def AnswerQuestion(question):
-    answer = retrieve_context(query, bm25, final, top_n=1)
+    question = Preprocess_question(question)
+    print(question)
+    answer = retrieve_context(question, bm25, final, top_n=1)
     return answer
 
+print(AnswerQuestion(query))
 # print(f"no of docs = {len(relevant_docs)}")
 # for doc in relevant_docs:
 #     reshaped_text = arabic_reshaper.reshape(doc)
