@@ -9,4 +9,4 @@ Question answering model for medical questions
 - [x] prepare Gui + API
 - [x] connect qa and retrieval model with Gui
 - [X] Report
-
+- [X] Presentation 
